@@ -1,0 +1,27 @@
+<script>
+    $(document).ready(function() {
+      $(".addToCard_customForm").on("submit", function(e){
+        e.preventDefault();
+        let addToCartForm = document.querySelector('form[action="/cart/add"]');
+        let formData = new FormData(addToCartForm);
+        $.ajax({
+            url: '/cart/add.js',
+            dataType: 'json',
+            type: 'post',
+            data: formData,
+            success: function() {
+              $.getJSON('/cart.js', function(cart) {
+                // Update cart count
+                $('#CartCount').text(cart.item_count);
+              });
+              setTimeout(function(){
+                $('html, body').animate({scrollTop:0},500);
+              }, 500);
+            },error: function(error) {
+              alert(error.responseJSON.description);
+            }
+        });
+        return false;
+      });
+    });
+  </script>
