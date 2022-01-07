@@ -24,4 +24,43 @@
         return false;
       });
     });
+    
+    $(function(){
+    $('.btn--add-to-cart').on('click', function(e){
+      e.preventDefault();
+      var id = $('.product-select').val();
+      var qty = $('.quantity__input').val();
+      var addData = {
+        'id':id, 
+        'quantity':qty
+      };
+
+      fetch('/cart/add.js', {
+        body: JSON.stringify(addData),
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With':'xmlhttprequest' /* XMLHttpRequest is ok too, it's case insensitive */
+        },
+        method: 'POST'
+      }).then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        if(json.status == "422"){
+          $(".error_msg").html(json.description);
+          setTimeout(function(){
+            $(".error_msg").html("");
+          }, 5000);
+        }else{
+          window.location.href = "/cart";
+        }
+        /* we have JSON */
+        //window.location.href = "/cart";
+      }).catch(function(err) {
+        /* uh oh, we have error. */
+        
+      });
+		return false;
+     });
+  });
   </script>
